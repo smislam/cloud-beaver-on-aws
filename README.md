@@ -12,19 +12,19 @@ This example uses the CloudBeaver Community edition.  If you prefer [CloudBeaver
 * Creates an EFS file system for CloudBeaver internal usage
 * Creates ECS Cluster
 * Deploys the CloudBeaver container
-* Creates a Certificate for TLS 
+* Creates a Certificate and Stores in ACM for TLS 
 * Creates Application Load Balancer endpoints for the CloudBeaver service
 
 ## Steps to run and test
 * Run the CDK code and wait for it to finish.  It will print out the CloudBeaver UI endpoint.  
-    * Open the UI endpoint.  Collect the credentials from Secrets Manager and log in.
+    * Open the UI endpoint.  Configure the admin.
     * ![image](cloudbeaver.PNG "CloudBeaver UI")
 
 ## Considerations
-* I've used Self-signed certificate.  Use a CA certificate.
-* Create R53 domain url
-* Integrate with IdP
-* Create robust monitoring and logging.
+* I've used Self-signed certificate.  Use a CA certificate instead.
+* I've used ALB directly.  Instead, create R53 domain URL.
+* Integrate with an IdP
+* Create robust monitoring and logging
 
 ## References
 * [DBeaver CloudBeaver](https://dbeaver.io/)
