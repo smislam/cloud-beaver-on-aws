@@ -1,0 +1,31 @@
+# Run CloudBeaver on AWS ECS
+In this project, we deploy [DBeaver CloudBeaver](https://dbeaver.io/) to Amazon ECS.
+
+This example uses the CloudBeaver Community edition.  If you prefer [CloudBeaver Enterprise](https://dbeaver.com/cloudbeaver-enterprise/) edition, please review the specifics on Vendor's website.
+
+## Architecture
+![image](cloud-beaver-architecture.png "CloudBeaver Deployment Architecture")
+
+## What does this build?
+* Creates Secrets Manager entry for database credentials
+* Creates an RDS PostgreSQL database for CloudBeaver internal database
+* Creates an EFS file system for CloudBeaver internal usage
+* Creates ECS Cluster
+* Deploys the CloudBeaver container
+* Creates a Certificate for TLS 
+* Creates Application Load Balancer endpoints for the CloudBeaver service
+
+## Steps to run and test
+* Run the CDK code and wait for it to finish.  It will print out the CloudBeaver UI endpoint.  
+    * Open the UI endpoint.  Collect the credentials from Secrets Manager and log in.
+    * ![image](cloudbeaver.PNG "CloudBeaver UI")
+
+## Considerations
+* I've used Self-signed certificate.  Use a CA certificate.
+* Create R53 domain url
+* Integrate with IdP
+* Create robust monitoring and logging.
+
+## References
+* [DBeaver CloudBeaver](https://dbeaver.io/)
+
