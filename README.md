@@ -20,6 +20,8 @@ This example uses the CloudBeaver Community edition.  If you prefer [CloudBeaver
     * Open the UI endpoint.  Configure the admin.
     * ![image](cloudbeaver.PNG "CloudBeaver UI")
 
+`Update 7/16/2025: Added admin credentials to Secrets Manager.  Use that credentials to configure the system.`
+
 ## Considerations
 * I've used Self-signed certificate.  Use a CA certificate instead.
 * I've used ALB directly.  Instead, create R53 domain URL.

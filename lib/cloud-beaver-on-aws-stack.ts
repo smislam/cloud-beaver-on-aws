@@ -6,6 +6,7 @@ import { AccessPoint, FileSystem } from 'aws-cdk-lib/aws-efs';
 import { ApplicationLoadBalancer, ApplicationProtocol } from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Credentials, DatabaseInstance, DatabaseInstanceEngine, DatabaseSecret, PostgresEngineVersion } from 'aws-cdk-lib/aws-rds';
+import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
@@ -13,8 +14,19 @@ export class CloudBeaverOnAwsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const vpc = new Vpc(this, 'cbeaver-vpc', { maxAzs: 2});
+    const adminUsername = 'administrator';
     const databaseName = 'cbinternal';
+
+    const vpc = new Vpc(this, 'cbeaver-vpc', { maxAzs: 2});
+
+    const adminSecret = new Secret(this, 'cb-admin-secret', {
+      secretName: 'cb-admin-secret',
+      generateSecretString: {
+        secretStringTemplate: JSON.stringify({ username: adminUsername }),
+        generateStringKey: 'password',
+        excludePunctuation: true
+      }
+    });
    
     const dbSecret = new DatabaseSecret(this, 'cb-db-secret', {
       username: 'dbadmin',
@@ -76,6 +88,8 @@ export class CloudBeaverOnAwsStack extends cdk.Stack {
       }],
       logging: LogDrivers.awsLogs({streamPrefix: 'cb-logs', logRetention: RetentionDays.ONE_DAY}),
       environment: {
+        CB_SERVER_NAME: 'My-CB-Server',
+        CB_ADMIN_NAME: adminUsername,
         CLOUDBEAVER_DB_DRIVER: 'postgres-jdbc',
         CLOUDBEAVER_DB_URL: `jdbc:postgresql://${dbInstance.dbInstanceEndpointAddress}:${dbInstance.dbInstanceEndpointPort}/${databaseName}`,
         CLOUDBEAVER_DB_USER: Credentials.fromSecret(dbSecret).username,
@@ -85,7 +99,8 @@ export class CloudBeaverOnAwsStack extends cdk.Stack {
       },
       secrets: {
         CLOUDBEAVER_DB_PASSWORD: ecsSecret.fromSecretsManager(dbSecret, 'password'),
-        CLOUDBEAVER_QM_DB_PASSWORD: ecsSecret.fromSecretsManager(dbSecret, 'password')
+        CLOUDBEAVER_QM_DB_PASSWORD: ecsSecret.fromSecretsManager(dbSecret, 'password'),
+        CB_ADMIN_PASSWORD: ecsSecret.fromSecretsManager(adminSecret, 'password')
       }
     });
 
