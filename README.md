@@ -17,7 +17,11 @@ This example uses the CloudBeaver Community edition.  If you prefer [CloudBeaver
 
 ## Steps to run and test
 * Run the CDK code and wait for it to finish.  It will print out the CloudBeaver UI endpoint.  
-    * Open the UI endpoint.  Configure the admin.
+    * Open the UI endpoint. You will get Cognito Loging page. Login using the temporary credentials.
+      *  ![image](cognito-login.png "Cognito Login")
+    * Change your credentials
+      *  ![image](cognito-change-password.png "Cognito Password Change")
+    * You are in CLoud Beaver.  Configure the admin.
     * ![image](cloudbeaver.PNG "CloudBeaver UI")
 
 `Update 7/16/2025: Added admin credentials to Secrets Manager.  Use that credentials to configure the system.`
